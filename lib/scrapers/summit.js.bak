@@ -1,0 +1,60 @@
+const request = require('request-promise-native');
+const cheerio = require('cheerio');
+const books = require('../books.json');
+
+let sermons = [];
+async function main() {
+  for (let book in books) {
+    // for (let index = 0; index <= 40; index++) {
+    console.log(`Sermon index ${books[book]}`);
+
+    var options = {
+      uri: `https://www.summitrdu.com/book/${books[book].toLowerCase().replace(' ', '-')}`,
+      transform: function (body) {
+        return cheerio.load(body);
+      }
+    };
+    try {
+      var $ = await request(options);
+
+      $('li.wpfc_grid_image').each(function (index) {
+        var title = $(this)
+          .find('h2 a')
+          .text()
+          .trim();
+        var scripture = $(this)
+          .find('span.scripture-reference')
+          .text()
+          .substring(2)
+          .trim();
+        var author = $(this)
+          .find('span.preacher_name')
+          .text()
+          .trim();
+        var date = $(this)
+          .find('span.sermon_date')
+          .text()
+          .trim();
+        var url = $(this)
+          .find('h2 a')
+          .attr('href');
+        if (scripture) {
+          sermons.push({
+            title: title,
+            scripture: scripture.trim(),
+            author: author,
+            source: 'The Summit Church',
+            url: url
+          });
+        }
+      });
+    } catch (error) {
+    } finally {
+    }
+  }
+  //}
+
+  return sermons;
+}
+
+main();
