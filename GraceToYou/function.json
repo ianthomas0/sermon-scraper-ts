@@ -9,5 +9,5 @@
             "exampleSchedule": "0 */60 * * * *"
         }
     ],
-    "scriptFile": "../dist/MLJTrust/index.js"
+    "scriptFile": "../dist/GraceToYou/index.js"
 }

@@ -1,10 +1,13 @@
 {
-  "bindings": [
-    {
-      "name": "myTimer",
-      "type": "timerTrigger",
-      "direction": "in",
-      "schedule": "0 */5 * * * *"
-    }
-  ]
+    "disabled": false,
+    "bindings": [
+        {
+            "name": "myTimer",
+            "type": "timerTrigger",
+            "direction": "in",
+            "schedule": "0 0 12 * * WED",
+            "exampleSchedule": "0 */60 * * * *"
+        }
+    ],
+    "scriptFile": "../dist/HarvestIndySouth/index.js"
 }

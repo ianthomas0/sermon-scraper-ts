@@ -1,13 +1,13 @@
 {
-    "disabled": true,
+    "disabled": false,
     "bindings": [
         {
             "name": "myTimer",
             "type": "timerTrigger",
             "direction": "in",
             "schedule": "0 0 12 * * WED",
-            "exampleSchedule": "0 */60 * * * *"
+            "unschedule": "0 */5 * * * *"
         }
     ],
-    "scriptFile": "../dist/MLJTrust/index.js"
+    "scriptFile": "../dist/DesiringGod/index.js"
 }

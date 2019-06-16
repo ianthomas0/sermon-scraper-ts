@@ -6,7 +6,7 @@ let sermons = [];
 async function main() {
   for (let book in books) {
     // for (let index = 0; index <= 40; index++) {
-    console.log(`Sermon index ${books[book]}`);
+    context.log(`Sermon index ${books[book]}`);
 
     var options = {
       uri: `https://www.summitrdu.com/book/${books[book].toLowerCase().replace(' ', '-')}`,

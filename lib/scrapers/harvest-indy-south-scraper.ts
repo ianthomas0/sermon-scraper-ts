@@ -4,18 +4,20 @@ import { Sermon } from "../models";
 import { Context } from "@azure/functions";
 
 const cheerio = require('cheerio');
+const uniq = require('lodash.uniq');
+const isEqual = require('lodash.isequal');
 
-export class DesiringGodScraper implements SermonScraper {
+export class HarvestIndySouthScraper implements SermonScraper {
 
-    public source: string = 'Desiring God';
+    public source: string = 'Harvest Indy South';
 
     public async scrape(context: Context): Promise<Sermon[]> {
-        let sermons = [];
-        context.log(`Scraping sermons for ${this.source}`);
-        for (let index = 0; index <= 115; index++) {
 
+        let sermons = [];
+        for (let index = 1; index <= 8; index++) {
+            context.log(`Sermon index ${index}`);
             let options = {
-                uri: `https://www.desiringgod.org/messages/all?page=${index}`,
+                uri: `https://www.harvestindysouth.org/resources/sermons/?page=${index}`,
                 transform: function (body) {
                     return cheerio.load(body);
                 }
@@ -23,28 +25,27 @@ export class DesiringGodScraper implements SermonScraper {
 
             let $ = await request(options);
 
-            $('div.card--resource').each(function (index, element) {
+            $('div.sermons-list div.container div.row div.last div.sermon').each(function (index, element) {
                 let title = $(element)
-                    .find('h2.card--resource__title')
+                    .find('h2.sermon-title')
                     .text()
                     .trim();
                 let date = $(element)
-                    .find('div.card--resource__date')
+                    .find('p.sermon-date')
                     .text()
                     .trim();
                 let scripture = $(element)
-                    .find('div.card--resource__scripture')
+                    .find('ul.sermon-links li:first-child')
                     .text()
                     .trim();
-                scripture = scripture.indexOf('Scripture') > -1 ? scripture.substring(11) : scripture;
                 let author = $(element)
-                    .find('div.card__author')
+                    .find('ul.sermon-links li:last-child')
                     .text()
                     .trim();
                 let url =
-                    'https://www.desiringgod.org' +
+                    'https://www.harvestindysouth.org' +
                     $(element)
-                        .find('a.card__shadow')
+                        .find('a.btn-hollow')
                         .attr('href');
                 if (scripture) {
                     sermons.push({
@@ -52,14 +53,15 @@ export class DesiringGodScraper implements SermonScraper {
                         date: date,
                         scripture: scripture,
                         author: author,
-                        source: 'Desiring God',
+                        source: this.source,
                         url: url
                     });
                 }
             });
+
+            sermons = uniq(sermons, isEqual);
         }
 
         return sermons;
     }
-
 }
