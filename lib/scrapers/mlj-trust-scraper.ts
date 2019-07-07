@@ -1,47 +1,47 @@
-import { SermonScraper } from "./sermon-scraper";
+import { Context } from '@azure/functions';
 import * as request from 'request-promise-native';
-import { Sermon } from "../models";
-import { Context } from "@azure/functions";
 import { Books } from '../books';
+import { Sermon } from '../models';
+import { SermonScraper } from './sermon-scraper';
 
-const cheerio = require('cheerio');
+import cheerio = require('cheerio');
 
 export class MLJTrustScraper implements SermonScraper {
 
     public source: string = 'MLJ Trust';
 
-    public async scrape(context: Context): Promise<Sermon[]> {
-        let sermons = [];
-        let books = Books.books;
+    public async scrape (context: Context): Promise<Sermon[]> {
+        const sermons = [];
+        const books = Books.books;
         let foundSermon: boolean;
 
         // tslint:disable-next-line: forin
         for (const book in books) {
-            for (let index = 0; index <= 40; index++) {
+            for (let page = 0; page <= 40; page++) {
                 foundSermon = false;
-                context.log(`Sermon index ${books[book]} ${index}`);
+                context.log(`Sermon index ${books[book]} ${page}`);
 
-                var options = {
-                    uri: `https://www.mljtrust.org/audio-sermons/${books[book].toLowerCase()}/?page=${index}`,
+                const options = {
+                    uri: `https://www.mljtrust.org/audio-sermons/${books[book].toLowerCase()}/?page=${page}`,
                     transform: function (body) {
                         return cheerio.load(body);
                     }
                 };
 
-                var $ = await request(options);
+                const $ = await request(options);
 
                 $('div.sermon').each(function (index) {
-                    var title = $(this)
+                    const title = $(this)
                         .find('h3 a')
                         .text()
                         .trim();
-                    var scripture = $(this)
+                    let scripture = $(this)
                         .find('p.metadata')
                         .text()
                         .trim();
-                    var scriptureTokens = scripture.split('—');
+                    const scriptureTokens = scripture.split('—');
                     scripture = scriptureTokens[2];
-                    var url =
+                    const url =
                         'https://www.mljtrust.org' +
                         $(this)
                             .find('a')

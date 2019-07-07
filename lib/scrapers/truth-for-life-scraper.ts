@@ -1,21 +1,20 @@
-import { SermonScraper } from "./sermon-scraper";
+import { Context } from '@azure/functions';
 import * as request from 'request-promise-native';
-import { Sermon } from "../models";
-import { Context } from "@azure/functions";
+import { Sermon } from '../models';
+import { SermonScraper } from './sermon-scraper';
 
-const cheerio = require('cheerio');
-
+import cheerio = require('cheerio');
 
 export class TruthForLifeScraper implements SermonScraper {
 
     public source: string = 'Truth For Life';
 
-    public async scrape(context: Context): Promise<Sermon[]> {
+    public async scrape (context: Context): Promise<Sermon[]> {
         const sermons = [];
-        for (let index = 1; index <= 30; index++) {
-            context.log(`Sermon index ${index}`);
+        for (let page = 1; page <= 30; page++) {
+            context.log(`Sermon index ${page}`);
             const options = {
-                uri: `https://www.truthforlife.org/resources/?per_page=100&type=sermon&page=${index}`,
+                uri: `https://www.truthforlife.org/resources/?per_page=100&type=sermon&page=${page}`,
                 transform: function (body) {
                     return cheerio.load(body);
                 }
@@ -33,11 +32,11 @@ export class TruthForLifeScraper implements SermonScraper {
                     .find('small.article-date')
                     .text()
                     .trim();
-                let scripture = $(element)
+                const scripture = $(element)
                     .find('small.scripture-reference')
                     .text()
                     .trim();
-                let url =
+                const url =
                     'https://www.truthforlife.org/resources/' +
                     $(this)
                         .find('h4.archive-title')
