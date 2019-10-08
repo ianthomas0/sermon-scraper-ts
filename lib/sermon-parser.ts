@@ -1,13 +1,13 @@
-var bcv_parser = require('bible-passage-reference-parser/js/en_bcv_parser').bcv_parser;
-var bcv = new bcv_parser();
+const bcv_parser = require('bible-passage-reference-parser/js/en_bcv_parser').bcv_parser;
+const bcv = new bcv_parser();
 import { Books } from './books';
 
 import { ScriptureReference } from './models';
 
 export class SermonParser {
 
-    public static parseSermons(sermons, context) {
-        let parsedSermons = [];
+    public static parseSermons (sermons, context) {
+        const parsedSermons = [];
         for (let sermon of sermons) {
             let parsedScripture = this.parseScripture(sermon.scripture);
             sermon.scriptureReferences = parsedScripture;
@@ -18,7 +18,7 @@ export class SermonParser {
         return parsedSermons;
     }
 
-    public static parseScripture(scripture) {
+    public static parseScripture (scripture) {
         let books = Books.books;
         let parsed = bcv.parse(scripture).osis();
 

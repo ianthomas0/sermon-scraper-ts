@@ -9,7 +9,7 @@ export class CapitolHillBaptistScraper implements SermonScraper {
 
     public source: string = 'Capitol Hill Baptist Church';
 
-    public async scrape(context: Context): Promise<Sermon[]> {
+    public async scrape (context: Context): Promise<Sermon[]> {
         let sermons = [];
         for (let index = 1; index <= 10; index++) {
             context.log(`Sermon index ${index}`);

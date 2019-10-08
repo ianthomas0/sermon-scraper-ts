@@ -1,0 +1,21 @@
+{
+    "bindings": [
+        {
+            "authLevel": "anonymous",
+            "type": "httpTrigger",
+            "direction": "in",
+            "name": "req",
+            "methods": [
+                "get",
+                "post"
+            ]
+        },
+        {
+            "type": "http",
+            "direction": "out",
+            "name": "res",
+            "port": 7072
+        }
+    ],
+    "scriptFile": "../dist/TestHttp/index.js"
+}
