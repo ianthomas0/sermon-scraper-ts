@@ -1,7 +1,7 @@
-import { SermonScraper } from "./sermon-scraper";
+import { Context } from '@azure/functions';
 import * as request from 'request-promise-native';
-import { Sermon } from "../models";
-import { Context } from "@azure/functions";
+import { Sermon } from '../models';
+import { SermonScraper } from './sermon-scraper';
 
 const cheerio = require('cheerio');
 
@@ -9,26 +9,26 @@ export class DesiringGodScraper implements SermonScraper {
 
     public source: string = 'Desiring God';
 
-    public async scrape(context: Context): Promise<Sermon[]> {
-        let sermons = [];
+    public async scrape (context: Context): Promise<Sermon[]> {
+        const sermons = [];
         context.log(`Scraping sermons for ${this.source}`);
-        for (let index = 0; index <= 115; index++) {
+        for (let index = 0; index <= 2; index++) {
 
-            let options = {
+            const options = {
                 uri: `https://www.desiringgod.org/messages/all?page=${index}`,
                 transform: function (body) {
                     return cheerio.load(body);
                 }
             };
 
-            let $ = await request(options);
+            const $ = await request(options);
 
-            $('div.card--resource').each(function (index, element) {
-                let title = $(element)
+            $('div.card--resource').each((index, element) => {
+                const title = $(element)
                     .find('h2.card--resource__title')
                     .text()
                     .trim();
-                let date = $(element)
+                const date = $(element)
                     .find('div.card--resource__date')
                     .text()
                     .trim();
@@ -37,15 +37,19 @@ export class DesiringGodScraper implements SermonScraper {
                     .text()
                     .trim();
                 scripture = scripture.indexOf('Scripture') > -1 ? scripture.substring(11) : scripture;
-                let author = $(element)
+                const author = $(element)
                     .find('div.card__author')
                     .text()
                     .trim();
-                let url =
+                const url =
                     'https://www.desiringgod.org' +
                     $(element)
                         .find('a.card__shadow')
                         .attr('href');
+
+                const topics = $(element)
+                    .find('a.card__shadow')
+                    .attr('href');
                 if (scripture) {
                     sermons.push({
                         title: title,
@@ -57,6 +61,27 @@ export class DesiringGodScraper implements SermonScraper {
                     });
                 }
             });
+        }
+
+        for (const s of sermons) {
+            const options = {
+                uri: `${s.url}`,
+                transform: function (body) {
+                    return cheerio.load(body);
+                }
+            };
+
+            /*const $ = await request(options);
+
+            const topics: string[] = [];
+
+            $('div.resource__meta ul li').each((index, element) => {
+                if (element.text().startsWith('Topic')) {
+                    element.find('a').each((index, e) => {
+                        topics.push(e.text());
+                    });
+                }
+            });*/
         }
 
         return sermons;

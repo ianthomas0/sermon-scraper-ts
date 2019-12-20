@@ -1,11 +1,11 @@
-import { AzureFunction, Context, HttpRequest } from "@azure/functions"
+import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import { SermonScraperRunner } from '../lib';
 import { Books } from '../lib/books';
-import { DesiringGodScraper } from '../lib/scrapers';
+import { IndexExporter } from '../lib/scrapers/index-exporter';
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
 
-    const scraper = new DesiringGodScraper();
+    const scraper = new IndexExporter();
     await SermonScraperRunner.runScraper(scraper, context);
 
     context.res = {
