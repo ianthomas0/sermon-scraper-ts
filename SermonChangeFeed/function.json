@@ -1,0 +1,17 @@
+{
+    "bindings": [
+        {
+            "type": "cosmosDBTrigger",
+            "name": "documents",
+            "direction": "in",
+            "leaseCollectionName": "leases",
+            "leaseCollectionPrefix": "processrun1",
+            "connectionStringSetting": "CosmosConnectionString",
+            "databaseName": "sermons",
+            "collectionName": "sermon",
+            "createLeaseCollectionIfNotExists": "false",
+            "startFromBeginning": true
+        }
+    ],
+    "scriptFile": "../dist/SermonChangeFeed/index.js"
+}

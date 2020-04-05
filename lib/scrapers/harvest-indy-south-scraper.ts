@@ -6,12 +6,13 @@ import { Context } from "@azure/functions";
 const cheerio = require('cheerio');
 const uniq = require('lodash.uniq');
 const isEqual = require('lodash.isequal');
+const _source = 'Harvest Indy South';
 
 export class HarvestIndySouthScraper implements SermonScraper {
 
-    public source: string = 'Harvest Indy South';
+    public source: string = _source;
 
-    public async scrape(context: Context): Promise<Sermon[]> {
+    public async scrape (context: Context): Promise<Sermon[]> {
 
         let sermons = [];
         for (let index = 1; index <= 8; index++) {
@@ -53,7 +54,7 @@ export class HarvestIndySouthScraper implements SermonScraper {
                         date: date,
                         scripture: scripture,
                         author: author,
-                        source: this.source,
+                        source: _source,
                         url: url
                     });
                 }
