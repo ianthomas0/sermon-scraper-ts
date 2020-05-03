@@ -27,6 +27,7 @@ export class SermonParser {
 
     public static parseScripture (scripture): ScriptureReference[] {
         const books = Books.books;
+        bcv.set_options({ osis_compaction_strategy: 'bcv' });
         const parsed = bcv.parse(scripture).osis();
 
         const references = parsed.split(',');
@@ -37,9 +38,11 @@ export class SermonParser {
             const range = r.split('-');
             const firstPart = range[0].split('.');
 
+            const parsedChapter = parseInt(firstPart[1], 10);
+
             const reference: ScriptureReference = {
                 book: books[firstPart[0]],
-                chapter: parseInt(firstPart[1], 10)
+                chapter: parsedChapter
             };
 
             if (firstPart[2] != null) {
@@ -52,10 +55,19 @@ export class SermonParser {
                 reference.chapterEnd = parseInt(secondPart[1], 10);
             }
 
+            // Set defaults for end chapter and verse for references that don't have them
+            // for the sake of searching via a range, i.e. Gen 1:1 => Gen 1:1-1:1
+            if (!reference.chapterEnd) {
+                reference.chapterEnd = reference.chapter;
+            }
+
+            if (reference.verseStart && !(reference.verseEnd)) {
+                reference.verseEnd = reference.verseStart;
+            }
+
             referencesParts.push(reference);
         }
 
         return referencesParts;
-
     }
 }

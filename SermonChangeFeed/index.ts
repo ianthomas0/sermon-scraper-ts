@@ -21,11 +21,14 @@ const cosmosDBTrigger: AzureFunction = async function (context: Context, documen
         const docId = sermon.id;
         const sermonIndex = docId.slice(-1) - 1;
         const relevantRef = ref[sermonIndex];
-        if (relevantRef && relevantRef.chapterEnd) {
+
+        if (relevantRef) {
+            sermon.VerseEnd = relevantRef.verseEnd;
+            sermon.VerseStart = relevantRef.verseStart;
+            sermon.Chapter = relevantRef.chapter;
             sermon.ChapterEnd = relevantRef.chapterEnd;
-        } else {
-            sermon.ChapterEnd = sermon.Chapter;
         }
+
         await container.items.upsert(sermon);
     }
 };
