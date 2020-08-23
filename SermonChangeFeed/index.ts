@@ -1,6 +1,7 @@
 import { CosmosClient } from '@azure/cosmos';
 import { AzureFunction, Context } from '@azure/functions';
 import { SermonParser } from '../lib';
+import { ScriptureReference } from '../lib/models';
 
 const key = process.env.CosmosAccessKey;
 const endpoint = process.env.CosmosEndpoint;
@@ -29,8 +30,24 @@ const cosmosDBTrigger: AzureFunction = async function (context: Context, documen
             sermon.ChapterEnd = relevantRef.chapterEnd;
         }
 
+        let formattedScripture = formatScriptureReference(ref);
+
+        sermon.FormattedScripture = formattedScripture;
+
         await container.items.upsert(sermon);
     }
 };
+
+function formatScriptureReference (refs: ScriptureReference[]): string {
+    let formatted = '';
+    for (const ref of refs) {
+        if (formatted.length !== 0) {
+            formatted = `${formatted}, `;
+        }
+        formatted = `${formatted}${ref.formatted}`;
+    }
+
+    return formatted;
+}
 
 export default cosmosDBTrigger;

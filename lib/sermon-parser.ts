@@ -40,20 +40,30 @@ export class SermonParser {
 
             const parsedChapter = parseInt(firstPart[1], 10);
 
-            const reference: ScriptureReference = {
+            let reference: ScriptureReference = {
                 book: books[firstPart[0]],
                 chapter: parsedChapter
             };
 
+            let formatted = `${reference.book} ${parsedChapter}`;
+
             if (firstPart[2] != null) {
                 reference.verseStart = parseInt(firstPart[2], 10);
+                formatted = `${formatted}:${reference.verseStart}`;
             }
 
             if (range[1]) {
                 const secondPart = range[1].split('.');
                 reference.verseEnd = parseInt(secondPart[2], 10);
                 reference.chapterEnd = parseInt(secondPart[1], 10);
+                if (reference.chapterEnd && reference.chapterEnd !== reference.chapter) {
+                    formatted = `${formatted}-${reference.chapterEnd}:${reference.verseEnd}`;
+                } else {
+                    formatted = `${formatted}-${reference.verseEnd}`;
+                }
             }
+
+            reference.formatted = formatted;
 
             // Set defaults for end chapter and verse for references that don't have them
             // for the sake of searching via a range, i.e. Gen 1:1 => Gen 1:1-1:1
