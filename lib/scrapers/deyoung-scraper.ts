@@ -6,10 +6,12 @@ import { OptionsWithUri } from "request-promise-native";
 
 const cheerio = require('cheerio');
 
-export class DeYoungScraper implements SermonScraper {
-    public source: string = 'University Reformed Church';
+const _source: string = 'University Reformed Church';
 
-    public async scrape(context: Context): Promise<Sermon[]> {
+export class DeYoungScraper implements SermonScraper {
+    public source: string = _source;
+
+    public async scrape (context: Context): Promise<Sermon[]> {
         let sermons = [];
         context.log(`Scraping sermons for ${this.source}`);
         for (let index = 1; index <= 1; index++) {
@@ -43,7 +45,7 @@ export class DeYoungScraper implements SermonScraper {
                     title: title,
                     date: date,
                     author: author,
-                    source: this.source,
+                    source: _source,
                     url: url
                 });
             });
@@ -81,11 +83,11 @@ export class DeYoungScraper implements SermonScraper {
         return sermonsWithScripture;
     }
 
-    private sleep(millis) {
+    private sleep (millis) {
         return new Promise(resolve => setTimeout(resolve, millis));
     }
 
-    private fetchScripture(sermon: Sermon, sermonsWithScripture: Sermon[], retryCount: number) {
+    private fetchScripture (sermon: Sermon, sermonsWithScripture: Sermon[], retryCount: number) {
         let options: OptionsWithUri = {
             uri: sermon.url,
             transform: function (body) {
