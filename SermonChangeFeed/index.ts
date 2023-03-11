@@ -8,13 +8,22 @@ const endpoint = process.env.CosmosEndpoint;
 const client = new CosmosClient({ endpoint, key });
 
 const databaseDefinition = { id: 'sermons' };
-const collectionDefinition = { id: 'sermons-processed', partitionKey: { paths: ['/Book'] } };
+const collectionDefinition = {
+    id: 'sermons-processed',
+    partitionKey: { paths: ['/Book'] },
+};
 
-const cosmosDBTrigger: AzureFunction = async function (context: Context, documents: any[]): Promise<void> {
-
+const cosmosDBTrigger: AzureFunction = async function (
+    context: Context,
+    documents: any[]
+): Promise<void> {
     context.log('Processing sermon change feed batch');
-    const { database } = await client.databases.createIfNotExists(databaseDefinition);
-    const { container } = await database.containers.createIfNotExists(collectionDefinition);
+    const { database } = await client.databases.createIfNotExists(
+        databaseDefinition
+    );
+    const { container } = await database.containers.createIfNotExists(
+        collectionDefinition
+    );
 
     for (const sermon of documents) {
         const ref = SermonParser.parseScripture(sermon.Scripture);
