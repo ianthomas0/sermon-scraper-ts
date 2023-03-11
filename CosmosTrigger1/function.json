@@ -1,0 +1,15 @@
+{
+  "bindings": [
+    {
+      "type": "cosmosDBTrigger",
+      "name": "documents",
+      "direction": "in",
+      "leaseCollectionName": "leases",
+      "connectionStringSetting": "CosmosConnectionString",
+      "databaseName": "sermons",
+      "collectionName": "sermon",
+      "createLeaseCollectionIfNotExists": true
+    }
+  ],
+  "scriptFile": "../dist/CosmosTrigger1/index.js"
+}

@@ -29,7 +29,7 @@ const cosmosDBTrigger: AzureFunction = async function (context: Context, documen
             sermon.ChapterEnd = relevantRef.chapterEnd;
         }
 
-        await container.items.upsert(sermon);
+        // await container.items.upsert(sermon);
     }
 };
 
