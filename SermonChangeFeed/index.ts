@@ -1,20 +1,29 @@
-import { CosmosClient } from '@azure/cosmos';
-import { AzureFunction, Context } from '@azure/functions';
-import { SermonParser } from '../lib';
+import { CosmosClient } from "@azure/cosmos";
+import { AzureFunction, Context } from "@azure/functions";
+import { SermonParser } from "../lib";
 
 const key = process.env.CosmosAccessKey;
 const endpoint = process.env.CosmosEndpoint;
 
 const client = new CosmosClient({ endpoint, key });
 
-const databaseDefinition = { id: 'sermons' };
-const collectionDefinition = { id: 'sermons-processed', partitionKey: { paths: ['/Book'] } };
+const databaseDefinition = { id: "sermons" };
+const collectionDefinition = {
+    id: "sermons-processed",
+    partitionKey: { paths: ["/Book"] },
+};
 
-const cosmosDBTrigger: AzureFunction = async function (context: Context, documents: any[]): Promise<void> {
-
-    context.log('Processing sermon change feed batch');
-    const { database } = await client.databases.createIfNotExists(databaseDefinition);
-    const { container } = await database.containers.createIfNotExists(collectionDefinition);
+const cosmosDBTrigger: AzureFunction = async function (
+    context: Context,
+    documents: any[]
+): Promise<void> {
+    context.log("Processing sermon change feed batch");
+    const { database } = await client.databases.createIfNotExists(
+        databaseDefinition
+    );
+    const { container } = await database.containers.createIfNotExists(
+        collectionDefinition
+    );
 
     for (const sermon of documents) {
         const ref = SermonParser.parseScripture(sermon.Scripture);
@@ -29,7 +38,7 @@ const cosmosDBTrigger: AzureFunction = async function (context: Context, documen
             sermon.ChapterEnd = relevantRef.chapterEnd;
         }
 
-        // await container.items.upsert(sermon);
+        await container.items.upsert(sermon);
     }
 };
 
