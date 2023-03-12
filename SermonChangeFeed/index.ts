@@ -10,7 +10,7 @@ const client = new CosmosClient({ endpoint, key });
 
 const databaseDefinition = { id: 'sermons' };
 const collectionDefinition = {
-    id: 'sermon',
+    id: 'sermons-processed',
     partitionKey: { paths: ['/Book'] },
 };
 
