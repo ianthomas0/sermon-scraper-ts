@@ -8,7 +8,7 @@ import _ = require('lodash');
 let moment = require('moment');
 
 export class SermonUploader {
-    public static async uploadSermons (sermons: Sermon[]): Promise<number> {
+    public static async uploadSermons(sermons: Sermon[]): Promise<number> {
         let count = 0;
         let totalCount = 0;
         let sermonData: SermonData[] = [];
@@ -16,10 +16,12 @@ export class SermonUploader {
             if (sermon.scripture) {
                 let index = 1;
                 for (const scriptureReference of sermon.scriptureReferences) {
-                    const date = new moment(sermon.date);
-                    const id = `${sermon.title.replace(/[^0-9a-z]/gi, '')}${index}`;
+                    const id = `${sermon.title.replace(
+                        /[^0-9a-z]/gi,
+                        ''
+                    )}${index}`;
 
-                    sermonData.push({
+                    let data: SermonData = {
                         Book: scriptureReference.book,
                         Chapter: scriptureReference.chapter,
                         VerseStart: scriptureReference.verseStart,
@@ -27,23 +29,29 @@ export class SermonUploader {
                         Url: sermon.url,
                         Author: sermon.author,
                         Source: sermon.source,
-                        Date: date.format('YYYY-MM-DD'),
                         Title: sermon.title,
                         Scripture: sermon.scripture,
                         Id: id,
-                        Topics: sermon.topics
-                    });
+                        Topics: sermon.topics,
+                    };
+
+                    if (sermon.date) {
+                        const date = new moment(sermon.date);
+                        data.Date = date.toISOString();
+                    }
+
+                    sermonData.push(data);
 
                     index++;
                     count++;
                 }
             }
 
-            if (count >= 500) {
+            if (count >= 100) {
                 await this.upload(sermonData, count);
                 count = 0;
                 sermonData = [];
-                totalCount = totalCount + 500;
+                totalCount = totalCount + 100;
             }
         }
 
@@ -53,12 +61,15 @@ export class SermonUploader {
         return totalCount;
     }
 
-    private static async upload (sermonData: SermonData[], count: number): Promise<number> {
+    private static async upload(
+        sermonData: SermonData[],
+        count: number
+    ): Promise<number> {
         const options: OptionsWithUrl = {
             method: 'POST',
             url: `https://preachingcollectivefunctions.azurewebsites.net/api/InsertSermon`,
             body: sermonData,
-            json: true
+            json: true,
         };
 
         await request(options);

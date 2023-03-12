@@ -1,14 +1,15 @@
-export interface SermonData {
+export interface SermonDocument {
     Book: string;
     Chapter: number;
+    ChapterEnd: number;
     VerseStart: number;
     VerseEnd: number;
     Url: string;
     Author: string;
     Source: string;
-    Date?: string;
+    Date: string;
     Title: string;
     Scripture: string;
-    Id: string;
+    id: string;
     Topics: string[];
 }

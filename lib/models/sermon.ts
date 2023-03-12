@@ -4,9 +4,9 @@ export interface Sermon {
     url: string;
     author: string;
     source: string;
-    date: Date;
+    date: string;
     title: string;
     scripture: string;
-    scriptureReferences: ScriptureReference[];
-    topics: string[];
+    scriptureReferences?: ScriptureReference[];
+    topics?: string[];
 }

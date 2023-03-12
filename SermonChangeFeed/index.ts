@@ -1,6 +1,7 @@
 import { CosmosClient } from '@azure/cosmos';
 import { AzureFunction, Context } from '@azure/functions';
 import { SermonParser } from '../lib';
+import { SermonDocument } from '../lib/models';
 
 const key = process.env.CosmosAccessKey;
 const endpoint = process.env.CosmosEndpoint;
@@ -25,10 +26,11 @@ const cosmosDBTrigger: AzureFunction = async function (
         collectionDefinition
     );
 
-    for (const sermon of documents) {
+    for (const doc of documents) {
+        let sermon = doc as SermonDocument;
         const ref = SermonParser.parseScripture(sermon.Scripture);
         const docId = sermon.id;
-        const sermonIndex = docId.slice(-1) - 1;
+        const sermonIndex = parseInt(docId.slice(-1)) - 1;
         const relevantRef = ref[sermonIndex];
 
         if (relevantRef) {
