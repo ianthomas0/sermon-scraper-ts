@@ -1,13 +1,13 @@
 // tslint:disable-next-line: no-var-requires
-const bcv_parser = require('bible-passage-reference-parser/js/en_bcv_parser').bcv_parser;
+const bcv_parser =
+    require('bible-passage-reference-parser/js/en_bcv_parser').bcv_parser;
 const bcv = new bcv_parser();
 import { Books } from './books';
 
 import { ScriptureReference } from './models';
 
 export class SermonParser {
-
-    public static parseSermons (sermons, context) {
+    public static parseSermons(sermons, context) {
         const parsedSermons = [];
         for (const sermon of sermons) {
             this.parseSermon(sermon, context);
@@ -17,15 +17,14 @@ export class SermonParser {
         return parsedSermons;
     }
 
-    public static parseSermon (sermon, context) {
+    public static parseSermon(sermon, context) {
         const parsedScripture = this.parseScripture(sermon.scripture);
         sermon.scriptureReferences = parsedScripture;
-        sermon.date = undefined;
 
         return sermon;
     }
 
-    public static parseScripture (scripture): ScriptureReference[] {
+    public static parseScripture(scripture): ScriptureReference[] {
         const books = Books.books;
         bcv.set_options({ osis_compaction_strategy: 'bcv' });
         const parsed = bcv.parse(scripture).osis();
@@ -42,7 +41,7 @@ export class SermonParser {
 
             const reference: ScriptureReference = {
                 book: books[firstPart[0]],
-                chapter: parsedChapter
+                chapter: parsedChapter,
             };
 
             if (firstPart[2] != null) {
@@ -61,7 +60,7 @@ export class SermonParser {
                 reference.chapterEnd = reference.chapter;
             }
 
-            if (reference.verseStart && !(reference.verseEnd)) {
+            if (reference.verseStart && !reference.verseEnd) {
                 reference.verseEnd = reference.verseStart;
             }
 
