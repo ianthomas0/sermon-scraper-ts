@@ -1,5 +1,6 @@
 export interface SermonDocument {
     Book: string;
+    BookOrder: number;
     Chapter: number;
     ChapterEnd: number;
     VerseStart: number;
