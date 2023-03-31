@@ -22,8 +22,10 @@ export class SermonUploader {
                     )}${index}`;
 
                     let data: SermonData = {
+                        BookOrder: scriptureReference.bookOrder,
                         Book: scriptureReference.book,
                         Chapter: scriptureReference.chapter,
+                        ChapterEnd: scriptureReference.chapterEnd,
                         VerseStart: scriptureReference.verseStart,
                         VerseEnd: scriptureReference.verseEnd,
                         Url: sermon.url,

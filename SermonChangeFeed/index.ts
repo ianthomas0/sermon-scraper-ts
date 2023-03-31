@@ -1,6 +1,5 @@
 import { CosmosClient } from '@azure/cosmos';
 import { AzureFunction, Context } from '@azure/functions';
-import { SermonParser } from '../lib';
 import { SermonDocument } from '../lib/models';
 
 const key = process.env.CosmosAccessKey;
@@ -28,19 +27,15 @@ const cosmosDBTrigger: AzureFunction = async function (
 
     for (const doc of documents) {
         let sermon = doc as SermonDocument;
-        const ref = SermonParser.parseScripture(sermon.Scripture);
         const docId = sermon.id;
         const sermonIndex = parseInt(docId.slice(-1)) - 1;
-        const relevantRef = ref[sermonIndex];
 
-        if (relevantRef) {
-            sermon.VerseEnd = relevantRef.verseEnd;
-            sermon.VerseStart = relevantRef.verseStart;
-            sermon.Chapter = relevantRef.chapter;
-            sermon.ChapterEnd = relevantRef.chapterEnd;
+        let modified = false;
+
+        if (modified) {
+            context.log('Updated document');
+            await container.items.upsert(sermon);
         }
-
-        await container.items.upsert(sermon);
     }
 };
 

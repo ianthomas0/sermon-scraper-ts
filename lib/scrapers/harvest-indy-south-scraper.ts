@@ -37,10 +37,11 @@ export class HarvestIndySouthScraper implements SermonScraper {
                     .find('ul.sermon-links li:last-child')
                     .text()
                     .trim();
+
                 let url =
                     'https://www.redeemerbible.church' +
                     $(element).find('a.btn-hollow').attr('href');
-                if (scripture) {
+                if (scripture && scripture !== author) {
                     sermons.push({
                         title: title,
                         date: date,
