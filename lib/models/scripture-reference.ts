@@ -1,6 +1,7 @@
 export interface ScriptureReference {
     book: string;
-    chapter: number;
+    bookOrder: number;
+    chapter?: number;
     chapterEnd?: number;
     verseStart?: number;
     verseEnd?: number;

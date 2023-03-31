@@ -40,6 +40,7 @@ export class SermonParser {
             const parsedChapter = parseInt(firstPart[1], 10);
 
             const reference: ScriptureReference = {
+                bookOrder: Books.bookOrderMap[firstPart[0]],
                 book: books[firstPart[0]],
                 chapter: parsedChapter,
             };

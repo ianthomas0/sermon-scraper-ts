@@ -1,5 +1,6 @@
 export interface SermonData {
     Book: string;
+    BookOrder: number;
     Chapter: number;
     VerseStart: number;
     VerseEnd: number;
