@@ -30,12 +30,8 @@ const cosmosDBTrigger: AzureFunction = async function (
         const docId = sermon.id;
         const sermonIndex = parseInt(docId.slice(-1)) - 1;
 
-        let modified = false;
-
-        if (modified) {
-            context.log('Updated document');
-            await container.items.upsert(sermon);
-        }
+        // Mirror document to the processed collection
+        await container.items.upsert(sermon);
     }
 };
 
