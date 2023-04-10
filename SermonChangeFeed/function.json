@@ -5,7 +5,7 @@
             "name": "documents",
             "direction": "in",
             "leaseCollectionName": "leases",
-            "leaseCollectionPrefix": "processrun16",
+            "leaseCollectionPrefix": "processrun17",
             "connectionStringSetting": "CosmosConnectionString",
             "databaseName": "sermons",
             "collectionName": "sermon",
