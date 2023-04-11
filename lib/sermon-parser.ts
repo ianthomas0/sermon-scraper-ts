@@ -33,15 +33,29 @@ export class SermonParser {
 
         const referencesParts: ScriptureReference[] = [];
 
+        if (references[0] === '') {
+            if (Books.bookOrderMap[scripture]) {
+                const reference: ScriptureReference = {
+                    bookOrder: Books.bookOrderMap[scripture],
+                    book: scripture,
+                };
+                referencesParts.push(reference);
+            }
+
+            return referencesParts;
+        }
+
         for (const r of references) {
             const range = r.split('-');
             const firstPart = range[0].split('.');
 
             const parsedChapter = parseInt(firstPart[1], 10);
 
+            let book = books[firstPart[0]];
+            let bookOrder = Books.bookOrderMap[book];
             const reference: ScriptureReference = {
-                bookOrder: Books.bookOrderMap[firstPart[0]],
-                book: books[firstPart[0]],
+                bookOrder: bookOrder,
+                book: book,
                 chapter: parsedChapter,
             };
 
