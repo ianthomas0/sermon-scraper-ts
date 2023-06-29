@@ -10,7 +10,7 @@ export class CapitolHillBaptistScraper implements SermonScraper {
 
     public async scrape(context: Context): Promise<Sermon[]> {
         let sermons = [];
-        for (let index = 1; index <= 10; index++) {
+        for (let index = 1; index <= 20; index++) {
             context.log(`Sermon index ${index}`);
             let options = {
                 uri: `https://www.capitolhillbaptist.org/resources/sermons/?page=${index}`,
