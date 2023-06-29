@@ -13,4 +13,5 @@ export interface SermonData {
     Scripture: string;
     Id: string;
     Topics: string[];
+    Version: number;
 }

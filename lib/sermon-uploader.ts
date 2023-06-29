@@ -21,6 +21,12 @@ export class SermonUploader {
                         ''
                     )}${index}`;
 
+                    let sourceId = sermon.source
+                        .toLocaleLowerCase()
+                        .replaceAll(' ', '-');
+                    // Create deterministic id
+                    const deterministicId = `sermon-${sourceId}-${id}`;
+
                     let data: SermonData = {
                         BookOrder: scriptureReference.bookOrder,
                         Book: scriptureReference.book,
@@ -33,8 +39,9 @@ export class SermonUploader {
                         Source: sermon.source,
                         Title: sermon.title,
                         Scripture: sermon.scripture,
-                        Id: id,
+                        Id: deterministicId,
                         Topics: sermon.topics,
+                        Version: 1,
                     };
 
                     if (sermon.date) {
